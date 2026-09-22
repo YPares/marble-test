@@ -9,19 +9,21 @@ fn main() {
         thread::spawn(move || {
             loop {
                 // Each client sleeps a different amount of time
-                thread::sleep(Duration::from_secs(1 + (client_id as u64)));
+                thread::sleep(Duration::from_millis(1 + (client_id as u64)));
                 let msg = q_client.read(client_id);
                 println!("Client {} read: {:?}", client_id, msg);
             }
         });
     }
-    for msg in 0..100000 {
+    let mut msg = 0;
+    loop {
         let r = q.push(msg);
         if r {
-            println!("Published {}", msg)
+            println!("Published {}", msg);
+            msg += 1;
         } else {
-            println!("Couldn't publish, queue full");
+            println!("Couldn't publish {}, queue full", msg);
         }
-        thread::sleep(Duration::from_secs(2));
+        thread::sleep(Duration::from_millis(2));
     }
 }
