@@ -11,7 +11,12 @@ fn main() {
                 // Each client sleeps a different amount of time
                 thread::sleep(Duration::from_millis(1 + (client_id as u64)));
                 let msg = q_client.read(client_id);
-                println!("Client {} read: {:?}", client_id, msg);
+                match msg {
+                    Some(x) => {
+                        println!("Client {} read: {}", client_id, x);
+                    }
+                    None => {}
+                }
             }
         });
     }
